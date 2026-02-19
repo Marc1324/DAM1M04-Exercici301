@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <link rel="stylesheet" href="/estils.css">
+</head>
+<body>
+    {{> header}}
+
+    <h1>{{title}}</h1>
+    <h2>{{subtitle}}</h2>
+
+    <div class="notice-box">
+        {{notice}}
+    </div>
+
+    {{#if showWarning}}
+        <div class="warning-alert">
+            ⚠️ ATENCIÓ: Aquesta és una zona amb avisos actius.
+        </div>
+    {{/if}}
+</body>
+</html>

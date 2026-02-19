@@ -2,29 +2,40 @@ const express = require('express');
 const hbs = require('hbs');
 const path = require('path');
 const fs = require('fs');
+const { title } = require('process');
 
 const app = express();
 
-// Config de les vistes i partials
+// Configuració Handlebars
 app.set('view engine', 'hbs');
-app.set('views', './server/views');
-hbs.registerPartials('./server/views/partials');
-app.use(express.static('public'));
+app.set('views', path.join(__dirname, 'views'));
+hbs.registerPartials(path.join(__dirname, 'views', 'partials'));
+app.use(express.static(path.join(__dirname, '../public')));
 
-// El helper per saber si un número és "menor o igual a"
-hbs.registerHelper('lte', (a, b) => a <= b);
+// D) Helper obligatori: lte (less than or equal)
+hbs.registerHelper('lte', function (a, b) {
+    return a <= b;
+});
 
-// Rutes
+// Càrrega de dades
+const site = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/site.json'), 'utf8'));
+const cities = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/cities.json'), 'utf8'));
+const countries = JSON.parse(fs.readFileSync(path.join(__dirname, 'data/countries.json'), 'utf8'));
+
+// B) Ruta /
 app.get('/', (req, res) => {
-    const site = JSON.parse(fs.readFileSync('./server/data/site.json'));
     res.render('index', site);
 });
 
+// C) Ruta /informe
 app.get('/informe', (req, res) => {
-    const site = JSON.parse(fs.readFileSync('./server/data/site.json'));
-    const cities = JSON.parse(fs.readFileSync('./server/data/cities.json'));
-    const countries = JSON.parse(fs.readFileSync('./server/data/countries.json'));
-    res.render('informe', { site, cities, countries });
+    res.render('informe', {
+        title:site.title ,
+        cities: cities.cities,
+        countriesName: countries.countries
+    });
 });
 
-app.listen(3000, () => console.log('Funcionant a http://localhost:3000'));
+app.listen(3000, () => console.log('Servidor a http://localhost:3000'));
+//con este conado se arrana 
+//npm run dev//
